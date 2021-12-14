@@ -10,7 +10,7 @@ import subprocess as sp
 import os
 import distutils.core
 import argparse
-import urlparse
+from urllib.parse import urlparse, urljoin
 import datetime
 
 import random
@@ -53,7 +53,7 @@ def download_video(base_url, content):
     heights = [(i, d['height']) for (i, d) in enumerate(content)]
     idx, _ = max(heights, key=lambda t: t[1])
     video = content[idx]
-    video_base_url = urlparse.urljoin(base_url, video['base_url'])
+    video_base_url = urljoin(base_url, video['base_url'])
     print('video base url:', video_base_url)
 
     # Create INSTANCE_TEMP if it doesn't exist
@@ -172,7 +172,7 @@ if __name__ == "__main__":
             print('HTTP error (' + str(resp.status_code) + '): ' + title)
             quit(0)
         content = resp.json()
-        base_url = urlparse.urljoin(master_json_url, content['base_url'])
+        base_url = urljoin(master_json_url, content['base_url'])
 
         # Download the components of the stream
         if not download_video(base_url, content['video']) or not download_audio(base_url, content['audio']):
